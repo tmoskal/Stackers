@@ -5,6 +5,7 @@ import time
 from getpass import getpass
 sense = SenseHat()
 sense.clear()
+colors = [(225,0,0),(255,170,0),(255,255,0),(0,255,0),(0,0,255),(119,0,179),(255,0,214),(255,0,0)]
 class stack():
 	def __init__(self):
 		pygame.init()
@@ -12,23 +13,38 @@ class stack():
 		self.gaming = True
 
 	def startGame(self):
-		pygame.time.set_timer(USEREVENT +1,200)
-		x = 1
-		p = 0
+		pygame.time.set_timer(USEREVENT +1,800)
+		x = 0
+		speed = .3
+		y = 7
+		n = 0
 		while self.gaming:
+		
 			for event in pygame.event.get():
-				sense.set_pixel(x,7,(0,0,225))
-				x = x +1
-				p = p +1
-				time.sleep(.1)
-				if p == 8:
-					p = 0
-				elif x == 8:
-					x = 0
-				sense.set_pixel(x,7,(0,0,225))
-				sense.set_pixel(p,7,(0,0,0))
 				if event.type == KEYDOWN:
-					self.gaming = false
+					if y == -1:
+						exit()				
+					if x == 0:
+						x = 8
+						sense.set_pixel(x-1,y,(colors[n]))
+						y = y-1
+						x = 0
+						n = n + 1
+					else:
+						sense.set_pixel(x-1,y,colors[n])
+						y = y-1
+						n = n + 1
+				else:
+					if y == -1:
+						exit()
+					sense.set_pixel(x,y,(225,225,225))
+					time.sleep(speed)
+					sense.set_pixel(x,y,(0,0,0))
+					time.sleep(speed)
+					if x < 8:
+						x = x + 1
+					if x == 8:
+						x = 0
 				
 				
 if __name__ == '__main__' : 
